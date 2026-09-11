@@ -1,6 +1,7 @@
 import express from 'express'
-import 'dotenv/config'
-//import leadsData from './data_input/leads.json' with { type: 'json' }
+import dotenv from 'dotenv'
+dotenv.config({ path: './src/.env' })
+import leadsData from './data_input/leads.json' with { type: 'json' }
 
 const app = express()
 const route = process.env.ROUTE
@@ -11,8 +12,8 @@ const PORT = process.env.PORT
 app.use(express.json())
 
 app.post(route, async (req, res)=>{
-    const leads = req.body
-    //const leads = leadsData
+    //const leads = req.body
+    const leads = leadsData
     if(!leads.entry || !leads.entry[0].changes){
         return res.status(400).json({ error: 'Bad Request', message: 'The the data is malformed or invalid'})
     }
@@ -34,6 +35,7 @@ app.post(route, async (req, res)=>{
         external_id: externalID ? externalID : 'N/A'
     }
     }
+    console.log(leadsDataClean)
     try {
         const crmApiResponse = await fetch(CRM_API_URL, {
             method: 'POST',
